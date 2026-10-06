@@ -1,9 +1,7 @@
-import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  Image,
   Pressable,
   StyleSheet,
   Text,
@@ -13,10 +11,9 @@ import {
 
 import { getProducts, searchProducts } from '../services/dummyJsonApi';
 import type { Product } from '../types/product';
+import ProductCard from './ProductCard';
 
 export default function ProductList() {
-  const router = useRouter();
-
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,25 +36,31 @@ export default function ProductList() {
   }, []);
 
   async function loadMoreProducts() {
-  if (loadingMore || search.trim() !== '') {
-    return;
+    if (loadingMore || search.trim() !== '') {
+      return;
+    }
+
+    try {
+      setLoadingMore(true);
+
+      const moreProducts = await getProducts(
+        20,
+        products.length
+      );
+
+      setProducts((currentProducts) => [
+        ...currentProducts,
+        ...moreProducts,
+      ]);
+    } catch (err) {
+      console.error(
+        'Error al cargar más productos:',
+        err
+      );
+    } finally {
+      setLoadingMore(false);
+    }
   }
-
-  try {
-    setLoadingMore(true);
-
-    const moreProducts = await getProducts(20, products.length);
-
-    setProducts((currentProducts) => [
-      ...currentProducts,
-      ...moreProducts,
-    ]);
-  } catch (err) {
-    console.error('Error al cargar más productos:', err);
-  } finally {
-    setLoadingMore(false);
-  }
-}
 
   async function handleSearch() {
     try {
@@ -68,12 +71,16 @@ export default function ProductList() {
         const data = await getProducts(20);
         setProducts(data);
       } else {
-        const data = await searchProducts(search.trim());
+        const data = await searchProducts(
+          search.trim()
+        );
         setProducts(data);
       }
     } catch (err) {
       console.error(err);
-      setError('No se pudieron buscar los productos.');
+      setError(
+        'No se pudieron buscar los productos.'
+      );
     } finally {
       setLoading(false);
     }
@@ -95,10 +102,17 @@ export default function ProductList() {
   if (error) {
     return (
       <View style={styles.center}>
-        <Text style={styles.error}>{error}</Text>
+        <Text style={styles.error}>
+          {error}
+        </Text>
 
-        <Pressable style={styles.button} onPress={loadProducts}>
-          <Text style={styles.buttonText}>Reintentar</Text>
+        <Pressable
+          style={styles.button}
+          onPress={loadProducts}
+        >
+          <Text style={styles.buttonText}>
+            Reintentar
+          </Text>
         </Pressable>
       </View>
     );
@@ -115,14 +129,21 @@ export default function ProductList() {
           onSubmitEditing={handleSearch}
         />
 
-        <Pressable style={styles.button} onPress={handleSearch}>
-          <Text style={styles.buttonText}>Buscar</Text>
+        <Pressable
+          style={styles.button}
+          onPress={handleSearch}
+        >
+          <Text style={styles.buttonText}>
+            Buscar
+          </Text>
         </Pressable>
       </View>
 
       <FlatList
         data={products}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) =>
+          item.id.toString()
+        }
         contentContainerStyle={styles.list}
         onEndReached={loadMoreProducts}
         onEndReachedThreshold={0.5}
@@ -130,55 +151,14 @@ export default function ProductList() {
           loadingMore ? (
             <View style={styles.footer}>
               <ActivityIndicator size="small" />
-              <Text>Cargando más productos...</Text>
+              <Text>
+                Cargando más productos...
+              </Text>
             </View>
           ) : null
         }
         renderItem={({ item }) => (
-          <Pressable
-            style={styles.card}
-            onPress={() => {
-              console.log('Tocando producto ID:', item.id);
-              router.push(`/product/${item.id}`);
-            }}
-          >
-            <Image
-              source={{ uri: item.thumbnail }}
-              style={styles.image}
-              resizeMode="contain"
-            />
-
-            <View style={styles.info}>
-              <Text style={styles.title}>
-                {item.title}
-              </Text>
-
-              <Text style={styles.category}>
-                {item.category}
-              </Text>
-
-              {item.brand && (
-                <Text style={styles.brand}>
-                  Marca: {item.brand}
-                </Text>
-              )}
-
-              <Text
-                style={styles.description}
-                numberOfLines={2}
-              >
-                {item.description}
-              </Text>
-
-              <Text style={styles.price}>
-                US$ {item.price.toFixed(2)}
-              </Text>
-
-              <Text>
-                ⭐ {item.rating} · Stock: {item.stock}
-              </Text>
-            </View>
-          </Pressable>
+          <ProductCard product={item} />
         )}
       />
     </View>
@@ -211,54 +191,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
 
-  card: {
-    flexDirection: 'row',
-    backgroundColor: '#ffffff',
-    borderRadius: 14,
-    padding: 12,
-    gap: 12,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-  },
-
-  image: {
-    width: 100,
-    height: 100,
-    backgroundColor: '#f3f4f6',
-    borderRadius: 10,
-  },
-
-  info: {
-    flex: 1,
-    gap: 4,
-  },
-
-  title: {
-    fontSize: 16,
-    fontWeight: '700',
-  },
-
-  category: {
-    fontSize: 12,
-    textTransform: 'uppercase',
-    color: '#6b7280',
-  },
-
-  brand: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#374151',
-  },
-
-  description: {
-    color: '#4b5563',
-  },
-
-  price: {
-    fontSize: 17,
-    fontWeight: '700',
-  },
-
   center: {
     flex: 1,
     alignItems: 'center',
@@ -281,8 +213,8 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-  color: '#ffffff',
-  fontWeight: '700',
+    color: '#ffffff',
+    fontWeight: '700',
   },
 
   footer: {
@@ -290,5 +222,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-
 });
