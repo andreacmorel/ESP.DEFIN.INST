@@ -1,20 +1,22 @@
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    FlatList,
-    Image,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
 
 import { getProducts, searchProducts } from '../services/dummyJsonApi';
 import type { Product } from '../types/product';
 
 export default function ProductList() {
+  const router = useRouter();
+
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -103,12 +105,10 @@ export default function ProductList() {
         renderItem={({ item }) => (
           <Pressable
             style={styles.card}
-            onPress={() =>
-              router.push({
-                pathname: '/product/[id]',
-                params: { id: item.id.toString() },
-              })
-            }
+            onPress={() => {
+              console.log('Tocando producto ID:', item.id);
+              router.push(`/product/${item.id}`);
+            }}
           >
             <Image
               source={{ uri: item.thumbnail }}

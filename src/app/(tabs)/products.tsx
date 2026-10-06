@@ -1,6 +1,6 @@
+import ProductList from '@/components/ProductList';
 import { StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import ProductList from '../components/ProductList';
 
 export default function ProductsScreen() {
   return (
