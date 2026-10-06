@@ -64,20 +64,27 @@ export default function ProductList() {
   }
 
   async function handleRefresh() {
-  try {
-    setRefreshing(true);
-    setError(null);
+    try {
+      setRefreshing(true);
+      setError(null);
 
-    const data = await getProducts(20);
-    setProducts(data);
-    setSearch('');
-  } catch (err) {
-    console.error('Error al actualizar productos:', err);
-    setError('No se pudieron actualizar los productos.');
-  } finally {
-    setRefreshing(false);
+      const data = await getProducts(20);
+
+      setProducts(data);
+      setSearch('');
+    } catch (err) {
+      console.error(
+        'Error al actualizar productos:',
+        err
+      );
+
+      setError(
+        'No se pudieron actualizar los productos.'
+      );
+    } finally {
+      setRefreshing(false);
+    }
   }
-}
 
   async function handleSearch() {
     try {
@@ -91,16 +98,26 @@ export default function ProductList() {
         const data = await searchProducts(
           search.trim()
         );
+
         setProducts(data);
       }
     } catch (err) {
       console.error(err);
+
       setError(
         'No se pudieron buscar los productos.'
       );
     } finally {
       setLoading(false);
     }
+  }
+
+  function sortProductsByPrice() {
+    const sortedProducts = [...products].sort(
+      (a, b) => a.price - b.price
+    );
+
+    setProducts(sortedProducts);
   }
 
   useEffect(() => {
@@ -111,7 +128,10 @@ export default function ProductList() {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" />
-        <Text>Cargando productos...</Text>
+
+        <Text>
+          Cargando productos...
+        </Text>
       </View>
     );
   }
@@ -156,6 +176,15 @@ export default function ProductList() {
         </Pressable>
       </View>
 
+      <Pressable
+        style={styles.sortButton}
+        onPress={sortProductsByPrice}
+      >
+        <Text style={styles.buttonText}>
+          Ordenar por precio ↑
+        </Text>
+      </Pressable>
+
       <FlatList
         data={products}
         numColumns={2}
@@ -167,11 +196,11 @@ export default function ProductList() {
         contentContainerStyle={styles.list}
         onEndReached={loadMoreProducts}
         onEndReachedThreshold={0.5}
-        
         ListFooterComponent={
           loadingMore ? (
             <View style={styles.footer}>
               <ActivityIndicator size="small" />
+
               <Text>
                 Cargando más productos...
               </Text>
@@ -207,6 +236,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
 
+  button: {
+    backgroundColor: '#1d4ed8',
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 8,
+    justifyContent: 'center',
+  },
+
+  buttonText: {
+    color: '#ffffff',
+    fontWeight: '700',
+  },
+
+  sortButton: {
+    backgroundColor: '#1d4ed8',
+    marginHorizontal: 16,
+    marginTop: 10,
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+
   list: {
     padding: 16,
     gap: 12,
@@ -223,19 +274,6 @@ const styles = StyleSheet.create({
   error: {
     color: '#b91c1c',
     textAlign: 'center',
-  },
-
-  button: {
-    backgroundColor: '#1d4ed8',
-    paddingHorizontal: 18,
-    paddingVertical: 10,
-    borderRadius: 8,
-    justifyContent: 'center',
-  },
-
-  buttonText: {
-    color: '#ffffff',
-    fontWeight: '700',
   },
 
   footer: {
