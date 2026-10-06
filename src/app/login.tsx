@@ -2,8 +2,8 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
-    Alert, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput,
-    TouchableWithoutFeedback, View,
+  Alert, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput,
+  TouchableWithoutFeedback, View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -139,14 +139,6 @@ export default function LoginScreen() {
                   </Text>
                 </Pressable>
               </View>
-            </View>
-
-            <View style={styles.footer}>
-              <View style={styles.statusDot} />
-
-              <Text style={styles.footerText}>
-                Catálogo conectado con DummyJSON
-              </Text>
             </View>
           </ScrollView>
         </TouchableWithoutFeedback>
@@ -345,26 +337,5 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '700',
     marginLeft: 10,
-  },
-
-  footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 25,
-  },
-
-  statusDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#22c55e',
-    marginRight: 8,
-  },
-
-  footerText: {
-    color: '#64748b',
-    fontSize: 13,
-    fontWeight: '600',
-  },
+  }
 });
