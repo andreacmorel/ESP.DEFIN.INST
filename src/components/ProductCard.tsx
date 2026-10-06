@@ -66,22 +66,23 @@ export default function ProductCard({
 }
 
 const styles = StyleSheet.create({
-  card: {
-    flexDirection: 'row',
+    card: {
+    flex: 1,
     backgroundColor: '#ffffff',
     borderRadius: 14,
     padding: 12,
-    gap: 12,
+    margin: 6,
     borderWidth: 1,
     borderColor: '#e5e7eb',
-  },
+    },
 
-  image: {
-    width: 100,
-    height: 100,
+    image: {
+    width: '100%',
+    height: 130,
     backgroundColor: '#f3f4f6',
     borderRadius: 10,
-  },
+    marginBottom: 10,
+    },
 
   info: {
     flex: 1,

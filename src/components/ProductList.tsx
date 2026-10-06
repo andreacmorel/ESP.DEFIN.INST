@@ -141,6 +141,7 @@ export default function ProductList() {
 
       <FlatList
         data={products}
+        numColumns={2}
         keyExtractor={(item) =>
           item.id.toString()
         }
