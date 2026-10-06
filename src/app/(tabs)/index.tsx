@@ -1,12 +1,6 @@
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'expo-router';
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View, } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
@@ -29,9 +23,7 @@ export default function HomeScreen() {
 
       <ScrollView
         contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* HEADER */}
+        showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View style={styles.brandContainer}>
             <View style={styles.logo}>
@@ -53,7 +45,6 @@ export default function HomeScreen() {
           </Pressable>
         </View>
 
-        {/* BIENVENIDA */}
         <View style={styles.welcome}>
           <Text style={styles.hello}>
             Hola 👋
@@ -68,7 +59,6 @@ export default function HomeScreen() {
           </Text>
         </View>
 
-        {/* TARJETA PRINCIPAL */}
         <View style={styles.mainCard}>
           <View style={styles.mainIcon}>
             <Text style={styles.mainIconText}>
@@ -99,7 +89,6 @@ export default function HomeScreen() {
           </Pressable>
         </View>
 
-        {/* HERRAMIENTAS */}
         <Text style={styles.sectionTitle}>
           Herramientas disponibles
         </Text>

@@ -2,17 +2,8 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
-    Alert,
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableWithoutFeedback,
-    View,
+    Alert, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput,
+    TouchableWithoutFeedback, View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -35,10 +26,8 @@ export default function LoginScreen() {
       return;
     }
 
-    // Guardamos el correo en la sesión
     login(email.trim());
 
-    // Vamos al Inicio
     router.replace('/');
   }
 
@@ -60,7 +49,6 @@ export default function LoginScreen() {
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
-            {/* MARCA */}
             <View style={styles.brandContainer}>
               <View style={styles.logo}>
                 <Text style={styles.logoText}>P</Text>
@@ -71,7 +59,6 @@ export default function LoginScreen() {
               </Text>
             </View>
 
-            {/* PRESENTACIÓN */}
             <View style={styles.hero}>
               <Text style={styles.title}>
                 Tu catálogo comienza acá.
@@ -82,7 +69,6 @@ export default function LoginScreen() {
               </Text>
             </View>
 
-            {/* FORMULARIO */}
             <View style={styles.card}>
               <Text style={styles.cardTitle}>
                 Ingresá a tu catálogo
@@ -93,7 +79,6 @@ export default function LoginScreen() {
               </Text>
 
               <View style={styles.form}>
-                {/* EMAIL */}
                 <View>
                   <Text style={styles.label}>
                     Correo electrónico
@@ -111,7 +96,6 @@ export default function LoginScreen() {
                   />
                 </View>
 
-                {/* CONTRASEÑA */}
                 <View>
                   <Text style={styles.label}>
                     Contraseña
@@ -142,7 +126,6 @@ export default function LoginScreen() {
                   </View>
                 </View>
 
-                {/* BOTÓN LOGIN */}
                 <Pressable
                   style={styles.loginButton}
                   onPress={handleLogin}
@@ -158,7 +141,6 @@ export default function LoginScreen() {
               </View>
             </View>
 
-            {/* ESTADO */}
             <View style={styles.footer}>
               <View style={styles.statusDot} />
 
