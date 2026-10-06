@@ -19,6 +19,7 @@ export default function ProductList() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [loadingMore, setLoadingMore] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const loadProducts = useCallback(async () => {
     try {
@@ -61,6 +62,22 @@ export default function ProductList() {
       setLoadingMore(false);
     }
   }
+
+  async function handleRefresh() {
+  try {
+    setRefreshing(true);
+    setError(null);
+
+    const data = await getProducts(20);
+    setProducts(data);
+    setSearch('');
+  } catch (err) {
+    console.error('Error al actualizar productos:', err);
+    setError('No se pudieron actualizar los productos.');
+  } finally {
+    setRefreshing(false);
+  }
+}
 
   async function handleSearch() {
     try {
@@ -142,12 +159,15 @@ export default function ProductList() {
       <FlatList
         data={products}
         numColumns={2}
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
         keyExtractor={(item) =>
           item.id.toString()
         }
         contentContainerStyle={styles.list}
         onEndReached={loadMoreProducts}
         onEndReachedThreshold={0.5}
+        
         ListFooterComponent={
           loadingMore ? (
             <View style={styles.footer}>
