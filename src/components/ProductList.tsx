@@ -21,6 +21,7 @@ export default function ProductList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const loadProducts = useCallback(async () => {
     try {
@@ -36,6 +37,27 @@ export default function ProductList() {
       setLoading(false);
     }
   }, []);
+
+  async function loadMoreProducts() {
+  if (loadingMore || search.trim() !== '') {
+    return;
+  }
+
+  try {
+    setLoadingMore(true);
+
+    const moreProducts = await getProducts(20, products.length);
+
+    setProducts((currentProducts) => [
+      ...currentProducts,
+      ...moreProducts,
+    ]);
+  } catch (err) {
+    console.error('Error al cargar más productos:', err);
+  } finally {
+    setLoadingMore(false);
+  }
+}
 
   async function handleSearch() {
     try {
@@ -102,6 +124,16 @@ export default function ProductList() {
         data={products}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.list}
+        onEndReached={loadMoreProducts}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={
+          loadingMore ? (
+            <View style={styles.footer}>
+              <ActivityIndicator size="small" />
+              <Text>Cargando más productos...</Text>
+            </View>
+          ) : null
+        }
         renderItem={({ item }) => (
           <Pressable
             style={styles.card}
@@ -249,7 +281,14 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: '#ffffff',
-    fontWeight: '700',
+  color: '#ffffff',
+  fontWeight: '700',
   },
+
+  footer: {
+    paddingVertical: 20,
+    alignItems: 'center',
+    gap: 8,
+  },
+
 });
